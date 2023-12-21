@@ -1,7 +1,7 @@
 const Pool = require('pg').Pool;
 const pool = new Pool({
     user: "postgres",
-    password: "", // Enter your password here
+    password: "sql", // Enter your password here
     database: "testWad", //Try to use the same name for your database
     host: "localhost",
     port: "5432"
@@ -20,35 +20,44 @@ const execute = async(createTblQuery, insertDataQuery) => {
 };
 
 const createTblQuery = ` 
-    CREATE TABLE IF NOT EXISTS "routes" (
+    CREATE TABLE IF NOT EXISTS "courses" (
         "id" SERIAL PRIMARY KEY,  
-        "fromcity" VARCHAR(200) NOT NULL,
-        "tocity" VARCHAR(200) NOT NULL,  
-        "cost" integer NOT NULL, 
-        "departuretime" VARCHAR(200) NOT NULL,
-        "departuredate" VARCHAR(200) NOT NULL
+        "code" VARCHAR(200) NOT NULL,
+        "title" VARCHAR(200) NOT NULL, 
+        "semester" VARCHAR(200) NOT NULL, 
+        "credits" integer NOT NULL, 
+        "description" VARCHAR(2000)
         );`;
 
-const insertDataQuery = `WITH data (fromcity, tocity, cost, departuretime, departuredate) AS 
+const insertDataQuery = `WITH data (code, title, semester, credits, description) AS 
    (
     VALUES
-    ('Tartu', 'Tallinn', 14, '06:00:00', '2022-03-24'),  
-    ('Tartu', 'Tallinn', 14, '08:00:00', '2022-03-24'),
-    ('Tartu', 'Parnu ', 11, '10:00:00', '2022-03-24'),
-    ('Tartu', 'Narva', 15, '10:30:00', '2022-03-24'),
-    ('Tartu', 'Tallinn', 12, '11:00:00', '2022-03-24'), 
-    ('Tartu', 'Parnu', 12, '12:00:00', '2022-03-24')
+    ('LTAT 05.006', 'Software Testing', 'spring', 6, 'test1'),  
+    ('LTAT 05.003', 'Software Engineerings', 'fall', 6, 'test2'),
+    ('LTAT 02.007', 'Data Engineering', 'fall', 6, null)
     )
-  INSERT INTO routes(fromcity, tocity, cost, departuretime, departuredate) 
-  SELECT  d.fromcity, d.tocity, d.cost, d.departuretime, d.departuredate
+  INSERT INTO courses(code, title, semester, credits, description) 
+  SELECT  d.code, d.title, d.semester, d.credits, d.description
   FROM data d
-  WHERE NOT EXISTS (SELECT * FROM routes WHERE id = 1);
+  WHERE NOT EXISTS (SELECT * FROM courses WHERE id = 1);
 `
 
 execute(createTblQuery, insertDataQuery).then(result => {
     if (result) {
-        console.log('If does not exists, table "routes" is created');
+        console.log('If does not exists, table "courses" is created');
     }
 });
+
+process.on('SIGINT', async () => {
+    console.log('Process interrupted. Cleaning up...');
+    try {
+      // Cleanup: Drop tables if they exist
+      await execute('DROP TABLE IF EXISTS "courses" CASCADE;');
+    } catch (error) {
+      console.error('Error during cleanup:', error);
+    } finally {
+      process.exit(); // Exit the process
+    }
+  });
 
 module.exports = pool;

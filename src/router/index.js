@@ -1,21 +1,27 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import RouteManagement from "../views/RouteManagement.vue";
-import AllRouts from "../views/AllRoutes.vue";
+import AboutView from "../views/AboutView.vue";
+import AllCourses from "../views/Courses.vue";
+import SemesterView from "../views/Semester.vue";
 
 
 const routes = [{
         path: "/",
-        name: "AllRouts",
-        component: AllRouts,
+        name: "AllCourses",
+        component: AllCourses,
     }, {
-        path: '/routemanagement',
-        name: 'RouteManagement',
-        component: RouteManagement,
+        path: '/aboutView',
+        name: 'AboutView',
+        component: AboutView,
     },
     { //will route to AllPosts view if none of the previous routes apply
         path: "/:catchAll(.*)",
-        name: "AllRouts",
-        component: AllRouts,
+        name: "AllCourses",
+        component: AllCourses,
+    },
+    {
+        path: "/semesters/:semester",
+        name: "SemesterView",
+        component: SemesterView,
     }
 ]
 
