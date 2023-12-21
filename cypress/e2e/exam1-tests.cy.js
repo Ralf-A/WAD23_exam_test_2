@@ -18,3 +18,10 @@ it('Test 1', () => {
       cy.get('h3').contains(`${clickedSemester}`);
   });
 });
+
+it('Test 1', () => {
+  cy.visit('http://localhost:8080');
+  cy.get('h3').contains('Courses')
+  cy.get('.semesterbutton').contains('fall').click()
+  cy.url().should('include', 'http://localhost:8080/semesters/fall')
+})
