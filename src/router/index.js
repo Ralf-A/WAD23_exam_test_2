@@ -1,13 +1,14 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import AboutView from "../views/AboutView.vue";
 import AllCourses from "../views/Courses.vue";
+import MyCourses from "../views/MyCourses.vue";
 import SemesterDetailView from '@/views/SemesterDetailView.vue';
 
 
 const routes = [{
     path: "/",
-    name: "AllCourses",
-    component: AllCourses,
+    name: "MyCourses",
+    component: MyCourses,
 }, {
     path: '/aboutView',
     name: 'AboutView',
